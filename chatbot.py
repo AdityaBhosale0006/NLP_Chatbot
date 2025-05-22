@@ -638,5 +638,8 @@ async def log_metrics():
 async def startup_event():
     asyncio.create_task(log_metrics())
 
-# Run: uvicorn chatbot.chatbot:app --reload
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 5000))
+    uvicorn.run("chatbot.chatbot:app", host="0.0.0.0", port=port, reload=True)
 
