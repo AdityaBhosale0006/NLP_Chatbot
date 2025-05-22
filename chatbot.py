@@ -236,11 +236,17 @@ SUPPORTED_LANGUAGES = {
     'yi': 'Yiddish'
 }
 
-# Image mapping for specific topics
+# Get the base directory of this file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Path to knowledge base JSON
+DOCUMENT_PATH = os.path.join(BASE_DIR, "pccoe_knowledge.json")
+
+# Image mapping for specific topics (just filenames)
 IMAGE_MAPPING = {
-    "campus": "static/campus.jpeg",
-    "library": "static/library.jpeg",
-    "admission": "static/admission_process.png",
+    "campus": "campus.jpeg",
+    "library": "library.jpeg",
+    "admission": "admission_process.png",
     # Add more mappings as needed
 }
 
@@ -344,12 +350,10 @@ safe_nltk_download("corpora/stopwords", "stopwords")
 app = FastAPI()
 
 # Mount static files for images
-# Place your images in static/images/ (relative to project root)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+static_images_path = os.path.join(BASE_DIR, "static")
+app.mount("/static", StaticFiles(directory=static_images_path), name="static")
 
 # Load and preprocess documents
-DOCUMENT_PATH = "chatbot/pccoe_knowledge.json"  # Replace with your file path
-
 try:
     raw_text = Path(DOCUMENT_PATH).read_text()
     logger.info(f"Loaded document from {DOCUMENT_PATH}")
@@ -437,7 +441,7 @@ def get_relevant_image(query: str) -> Optional[str]:
     query_lower = query.lower()
     for keyword, filename in IMAGE_MAPPING.items():
         if keyword in query_lower:
-            return f"/static/images/{filename}"  # Images should be in static/images/
+            return f"/static/{filename}"
     return None
 
 def is_no_questions(query: str, target_lang: str = 'en') -> bool:
