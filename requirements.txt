@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sentence-transformers
+faiss-cpu
+nltk
+numpy
+python-dotenv
+cryptography
+googletrans==3.1.0a0
+psutil
+pandas 
